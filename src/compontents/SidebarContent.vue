@@ -20,6 +20,7 @@ const emit = defineEmits(["update:leftSidebarCollapsed", "update:rightSidebarCol
 
 const localLeft = ref(false);
 const localRight= ref(false);
+const isMobile = ref(undefined);
 // if parent provides a value, sync local state
 watch(
     () => props.leftSidebarCollapsed,
@@ -31,6 +32,7 @@ watch(
 
 // always use this as the source of truth in the template
 const effectiveLeft = computed(() => {
+    console.log(props.leftSidebarCollapsed);
     return props.leftSidebarCollapsed !== undefined
         ? props.leftSidebarCollapsed
         : localLeft.value;
@@ -60,18 +62,29 @@ function collapseRight(val:boolean) {
 const width = ref(window.innerWidth);
 function updateWidth() {
     width.value = window.innerWidth;
-    if (width.value <= props.breakpoints.md){
+    if (width.value <= props.breakpoints.md && (isMobile.value == false || isMobile.value === undefined) ) {
+        isMobile.value = true;
         collapseLeft(true);
         collapseRight(true);
     }
-    if (width.value > props.breakpoints.md){
+    if (width.value > props.breakpoints.md && (isMobile.value == true || isMobile.value === undefined) ) {
+        isMobile.value = false;
         collapseLeft(false);
         collapseRight(false);
     }
 }
 
 onMounted(() => window.addEventListener("resize", updateWidth));
-onMounted(() => updateWidth());
+onMounted(() => {
+    width.value = window.innerWidth;
+    if (width.value <= props.breakpoints.md  ) {
+        isMobile.value = true;
+        collapseLeft(true);
+        collapseRight(true);
+    }else {
+        isMobile.value = false;
+    }
+});
 onUnmounted(() => window.removeEventListener("resize", updateWidth));
 
 const currentSize = computed(() => {
@@ -84,10 +97,8 @@ const currentSize = computed(() => {
 </script>
 
 <template>
-
-    <div class="overlay" id="overlay"></div>
-
-    <div class="layout-wrapper" :class="currentSize">
+    <div class="layout-wrapper" :class="[currentSize, { 'lo': !effectiveLeft }, {'ro': !effectiveRight }]" >
+        <div class="overlay"  @click="collapseLeft(true); collapseRight(true)"></div>
         <!-- Main container with max-width -->
         <div class="layout-container flex justify-content-center">
             <!-- Content area with sidebar and main content -->
@@ -113,9 +124,24 @@ const currentSize = computed(() => {
 
 <style lang="scss"  >
 .layout-wrapper {
+
     flex: 1; /* Takes up all available space */
     width: 100%;
     background: #d8afaf;
+
+    // make overlay visible when sidebars are opened
+    &.xs.lo, &.xs.ro, &.sm.lo, &.sm.ro {
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 900;
+            cursor: pointer;
+        }
+    }
 }
 
 // this addresses the grid div
@@ -134,12 +160,8 @@ const currentSize = computed(() => {
 }
 
 .main-content{
-    //flex: 0 0 auto;
-    //width: 100%;
-
     flex: 1; /* take up all remaining space */
     min-width: 0; /* prevent overflow when content is too wide */
-
     background: #6fb8ca;
 }
 
@@ -153,23 +175,37 @@ const currentSize = computed(() => {
     display: none;
 }
 
+.layout-wrapper.xs, .layout-wrapper.sm {
+    .sidebar{
+        position: fixed;
+        display: block;
+        top: 0;
+        bottom: 0;
+        left: -250px;
+        width: 250px;
+        background: #aa63cd;
+        z-index: 1000;
+    }
+}
+
+.layout-wrapper.lo {
+    .sidebar{
+        left: 0
+    }
+}
+
 .layout-wrapper.md {
     .sidebar{
         width: 25%;
     }
-    //.main-content{
-    //    width: 50%;
-    //}
 }
 
 .layout-wrapper.lg {
     .sidebar{
         width: 20%;
     }
-    //.main-content{
-    //    width: 60%;
-    //}
 }
+
 
 
 </style>

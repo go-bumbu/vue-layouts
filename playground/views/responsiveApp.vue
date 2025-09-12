@@ -5,7 +5,7 @@ import Placeholder from '../../src/compontents/placeholder.vue'
 import SidebarContent from '../../src/compontents/SidebarContent.vue'
 import { ref } from "vue";
 
-const leftCollapsed2 = ref(false);
+const leftCollapsed2 = ref(true);
 
 
 </script>
