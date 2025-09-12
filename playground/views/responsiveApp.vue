@@ -81,7 +81,7 @@ const leftCollapsed2 = ref(true);
 
                 </template>
             </Horizontal>
-            <SidebarContent  v-model:left-sidebar-collapsed="leftCollapsed2" >
+            <SidebarContent  v-model:left-sidebar-collapsed="leftCollapsed2" :right-sidebar-collapsed="true" >
                 <template #left>
                     <h3>Sidebar</h3>
                     <ul class="list-none p-0 m-0">
@@ -93,7 +93,7 @@ const leftCollapsed2 = ref(true);
 
                 <template #default >
                     <div class="button" @click="leftCollapsed2 = !leftCollapsed2"> >»»</div>
-                    <div class="button" @click="handleRightClick2" >  < <  </div>
+
 
                     <div class="p-3">
                         <h2>Main Content</h2>
