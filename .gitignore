@@ -1,0 +1,22 @@
+# Test binary, build with `go test -c`
+*.test
+
+# IDE shenanigans
+*.iml
+.idea/
+
+# build output
+dist/
+
+# node
+node_modules
+
+# secrets
+.npmrc
+
+# project databases
+carbon.db
+**/__tests__
+**/testdbs_sqlite
+zarf/appData/session
+!zarf/appData/session/.gitkeep

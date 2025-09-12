@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeFlex Main App Template</title>
+    <!-- PrimeFlex CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.min.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Full viewport height */
+        }
+
+        .layout-container {
+            max-width: 960px; /* Set your desired max-width */
+            margin: 0 auto;
+            width: 100%;
+            background: #e8e8e8;
+        }
+
+        .layout-wrapper {
+            flex: 1; /* Takes up all available space */
+            width: 100%;
+            background: #d8afaf;
+        }
+
+
+        #sidebar {
+            transition: width 0.3s ease, padding 0.3s ease, border 0.3s ease;
+        }
+
+        #sidebar > * {
+            opacity: 1;
+            transition: opacity 0.1s ease;
+        }
+
+        /* Style for collapsed sidebar */
+        #sidebar.collapsed {
+            width: 0;
+            padding: 0;
+            overflow: hidden;
+            border-right: none;
+        }
+        #sidebar.collapsed > * {
+            opacity: 0;
+        }
+
+
+
+        /* Mobile-specific styles */
+        @media screen and (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                top: 0;
+                left: -250px; /* Start off-screen */
+                height: 100%;
+                width: 250px;
+                z-index: 1001;
+                background-color: #f8f9fa;
+                box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+                transition: left 0.3s ease;
+                overflow-y: auto;
+                display: block !important;
+            }
+
+            #sidebar.active {
+                left: 0; /* Slide in when active */
+            }
+
+            .close-nav-button {
+                display: block; /* Show close button in mobile */
+            }
+
+            /* Add overlay for mobile */
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                display: none;
+            }
+
+            .overlay.active {
+                display: block;
+            }
+        }
+
+
+
+    </style>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+
+
+
+
+            // Get elements
+            const toggleNavBtn = document.getElementById('toggleNavBtn');
+            const closeNavBtn = document.getElementById('closeNavBtn');
+
+            const sidebar = document.getElementById('sidebar');
+            const contentArea = document.getElementById('content');
+
+            const overlay = document.getElementById('overlay');
+
+
+            // Check if we're in mobile view
+            function isMobileView() {
+                return window.innerWidth <= 768;
+            }
+
+
+            // Toggle navigation in desktop view
+            toggleNavBtn.addEventListener('click', function() {
+                if (isMobileView()) {
+                    // Mobile behavior: show sidebar with active class
+                    sidebar.classList.add('active');
+                    overlay.classList.add('active');
+                    sidebar.classList.remove('collapsed');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                } else {
+                    // Desktop behavior: toggle collapsed class
+                    sidebar.classList.toggle('collapsed');
+                    contentArea.classList.toggle('expanded');
+                }
+            });
+
+
+
+            // Close button for mobile view
+            closeNavBtn.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+            });
+
+            // Close when clicking overlay
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+            });
+
+            // Handle responsive behavior
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    // Reset mobile menu styles when switching to desktop
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+</head>
+<body>
+<!-- Overlay for mobile menu -->
+<div class="overlay" id="overlay"></div>
+
+<div class="app-container">
+
+    <div class="topbar" style="background: #3B82F6">
+        <div class="flex justify-content-between align-items-center">
+            <!-- Left column: Logo/Icon -->
+            <div class="flex align-items-center">
+                <div class="text-xl font-bold">
+                    <i class="fas fa-cube mr-2"></i>
+                    AppLogo
+                </div>
+            </div>
+            <!-- Center column: Menu -->
+            <div class="hidden md:flex">
+                <ul class="flex list-none m-0 p-0">
+                    <li class="px-3 py-2"><a href="#" >Dashboard</a></li>
+                    <li class="px-3 py-2"><a href="#" >Projects</a></li>
+                    <li class="px-3 py-2"><a href="#">Tasks</a></li>
+                    <li class="px-3 py-2"><a href="#" >Reports</a></li>
+                </ul>
+            </div>
+
+            <!-- Right column: Profile and Settings -->
+            <div class="flex align-items-center">
+
+                <button class="p-link text-white">
+                    <i class="fas fa-user-circle text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+
+
+        <div class="layout-wrapper">
+            <!-- Main container with max-width -->
+            <div class="layout-container flex justify-content-center">
+                <!-- Content area with sidebar and main content -->
+                <div class="grid w-full">
+                    <!-- Sidebar - visible on desktop, hidden on mobile -->
+                    <div id="sidebar" class="sidebar col-fixed  md:col-3 hidden md:block">
+
+                        <!-- Close button for mobile view -->
+                        <button class="close-nav-button" id="closeNavBtn">
+                            <i class="fas fa-times"></i>
+                        </button>
+
+                        <!-- Sidebar content -->
+                        <div class="p-3">
+                            <h3>Sidebar</h3>
+                            <ul class="list-none p-0 m-0">
+                                <li class="mb-2">Menu Item 1</li>
+                                <li class="mb-2">Menu Item 2</li>
+                                <li class="mb-2">Menu Item 3</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Main content area -->
+                    <div id="content" class="col md:col-9 col-12">
+                        <button class="toggle-nav-button" id="toggleNavBtn">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div class="p-3">
+                            <h2>Main Content</h2>
+                            <p>This is the main content area that will take the remaining space.</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="max-w-960 mx-auto">
+            <div class="flex justify-content-between align-items-center flex-wrap">
+                <div class="mb-2 md:mb-0">
+                    &copy; 2023 PrimeFlex App Template. All rights reserved.
+                </div>
+                <div>
+                    <a href="#" class="text-blue-500 mr-3 no-underline">Privacy Policy</a>
+                    <a href="#" class="text-blue-500 no-underline">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
