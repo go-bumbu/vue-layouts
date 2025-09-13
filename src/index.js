@@ -2,6 +2,7 @@ import VerticalLayout from './components/vertical.vue'
 import HorizontalLayout from './components/horizontal.vue'
 import Placeholder from './components/placeholder.vue'
 import ResponsiveHorizontal from './components/responsiveHorizontal.vue'
+import SidebarContent from './components/SidebarContent.vue'
 
 
 export {
@@ -9,6 +10,7 @@ export {
     HorizontalLayout,
     Placeholder,
     ResponsiveHorizontal,
+    SidebarContent,
 };
 
 // Provide an install function for Vue.use()
@@ -18,5 +20,6 @@ export default {
         app.component("HorizontalLayout", HorizontalLayout);
         app.component("Placeholder", Placeholder);
         app.component("ResponsiveHorizontal", ResponsiveHorizontal);
+        app.component("SidebarContent", SidebarContent);
     },
 };
