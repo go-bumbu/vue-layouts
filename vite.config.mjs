@@ -11,15 +11,15 @@ export default defineConfig(({ command }) => ({
     build: command === "build" ? {
         lib: {
             entry: path.resolve(__dirname, "src/index.js"),
-            name: "VueUtilsLibrary",
-            fileName: (format) => `vue-utils-library.${format}.js`
+            name: "VueLayouts",
+            fileName: (format) => `vue-layouts.${format}.js`
         },
         rollupOptions: {
             external: ["vue"],
             output: {
                 globals: { vue: "Vue" }
             }
-        }
+        },
     } : {},
     root: command === "serve" ? "playground" : ".", // use playground as root during dev
 }));

@@ -1,8 +1,9 @@
 {
-  "name": "vue-layouts",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@go-bumbu/vue-layouts",
+  "main": "dist/vue-layouts.umd.js",
+  "module": "dist/vue-layouts.es.js",
+  "version": "0.0.4",
+  "description": "Vuejs layout components used on go-bumbu",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,13 +13,13 @@
     "type": "git",
     "url": "https://github.com/go-bumbu/vue-layouts.git"
   },
-  "private": true,
-  "dependencies": {
-    "vite": "^7.1.3",
-    "vue": "^3.5.20",
-    "vue-router": "^4.5.1"
+  "license": "LGPL-3.0-or-later",
+  "peerDependencies": {
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0"
   },
   "devDependencies": {
+    "vite": "^7.1.3",
     "@vitejs/plugin-vue": "^6.0.1",
     "sass-embedded": "^1.92.0"
   }

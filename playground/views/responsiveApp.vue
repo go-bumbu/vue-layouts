@@ -1,12 +1,8 @@
 <script setup>
-import Vertical from '../../src/compontents/vertical.vue'
-import Horizontal from '../../src/compontents/horizontal.vue'
-import Placeholder from '../../src/compontents/placeholder.vue'
-import SidebarContent from '../../src/compontents/SidebarContent.vue'
-import { ref } from "vue";
-
-const leftCollapsed2 = ref(true);
-
+import Vertical from '../../src/components/vertical.vue'
+import Horizontal from '../../src/components/horizontal.vue'
+import Placeholder from '../../src/components/placeholder.vue'
+import SimpleSidebar from '../../src/components/simpleSidebar.vue'
 
 </script>
 
@@ -118,24 +114,3 @@ const leftCollapsed2 = ref(true);
         </template>
     </Vertical>
 </template>
-
-<style>
-.cc-rh-left{
-    background: #d5bcbc;
-}
-.cc-rh-right{
-    background: #495057;
-}
-.cc-rh-main{
-    background: #a5b1ba;
-}
-
-.button{
-    padding: 2px;
-    border: 1px solid #595656;
-    display: inline-block;
-    margin: 0.3rem 0.5rem ;
-    cursor: pointer;
-    background: #d1d1d1;
-}
-</style>

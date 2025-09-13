@@ -70,8 +70,8 @@ endif
 login: check_gh_token ## npm login to Github packages
 	@echo "//npm.pkg.github.com/:_authToken=$(GITHUB_TOKEN)" > .npmrc
 
-publish: ## publish the latest tag on GP packages
-	@npm publish --registry=https://npm.pkg.github.com
+publish: build ## publish the latest tag on GP packages
+	@npm publish --access public
 
 
 #==========================================================================================
