@@ -1,7 +1,8 @@
 <script setup>
-import Vertical from '../../src/compontents/vertical.vue'
-import Horizontal from '../../src/compontents/horizontal.vue'
-import Placeholder from '../../src/compontents/placeholder.vue'
+import Vertical from '../../src/components/vertical.vue'
+import Horizontal from '../../src/components/horizontal.vue'
+import Placeholder from '../../src/components/placeholder.vue'
+import SimpleSidebar from '../../src/components/simpleSidebar.vue'
 
 </script>
 
@@ -40,6 +41,13 @@ import Placeholder from '../../src/compontents/placeholder.vue'
                     <Placeholder class="target" :width="'100%'" :height="25" :color="13">center</Placeholder>
                     <Placeholder class="target" :width="'100%'" :height="500" :color="14">center content 2</Placeholder>
                 </template>
+                <SimpleSidebar>
+                    <template #left>
+                    </template>
+                    <template #default>
+
+                    </template>
+                </SimpleSidebar>
             </Horizontal>
         </template>
         <template #footer>

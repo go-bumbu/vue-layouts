@@ -1,7 +1,7 @@
-import VerticalLayout from "./compontents/vertical.vue";
-import HorizontalLayout from "./compontents/horizontal.vue";
-import ResponsiveHorizontal from "./compontents/responsiveHorizontal.vue";
-import Placeholder from "./compontents/placeholder.vue";
+import VerticalLayout from "./components/vertical.vue";
+import HorizontalLayout from "./components/horizontal.vue";
+import ResponsiveHorizontal from "./components/responsiveHorizontal.vue";
+import Placeholder from "./components/placeholder.vue";
 
 
 export {
