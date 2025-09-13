@@ -2,7 +2,7 @@
   "name": "@go-bumbu/vue-layouts",
   "main": "dist/vue-layouts.umd.js",
   "module": "dist/vue-layouts.es.js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Vuejs layout components used on go-bumbu",
   "scripts": {
     "dev": "vite",
