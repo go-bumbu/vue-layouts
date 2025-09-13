@@ -1,8 +1,8 @@
 <script setup>
-import Vertical from '../../src/compontents/vertical.vue'
-import Horizontal from '../../src/compontents/horizontal.vue'
-import Placeholder from '../../src/compontents/placeholder.vue'
-import SidebarContent from '../../src/compontents/SidebarContent.vue'
+import Vertical from '../../src/components/vertical.vue'
+import Horizontal from '../../src/components/horizontal.vue'
+import Placeholder from '../../src/components/placeholder.vue'
+import SidebarContent from '../../src/components/SidebarContent.vue'
 import { ref } from "vue";
 
 const leftCollapsed2 = ref(true);
@@ -35,12 +35,12 @@ const leftCollapsed2 = ref(true);
         <template #default>
             <Horizontal :verticalCenterContent="true" :centerContent="true"
                         content-max-width="960px"
-                       content-width="100%"
+                        content-width="100%"
                         left-max-width="200px"
                         right-max-width="200px"
                         right-width="200px"
                         right-min-width="200px"
-                >
+            >
                 <template #default>
                     <br>
                     <SidebarContent ref="childRef1">
@@ -74,9 +74,9 @@ const leftCollapsed2 = ref(true);
                     </SidebarContent>
 
 
-<!--
-=========================================================================================
--->
+                    <!--
+                    =========================================================================================
+                    -->
                     <br>
 
                 </template>

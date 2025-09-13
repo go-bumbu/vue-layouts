@@ -1,7 +1,7 @@
 <script setup>
-import VerticalLayout from '../../src/compontents/vertical.vue'
-import HorizontalLayout from '../../src/compontents/horizontal.vue'
-import Placeholder from '../../src/compontents/placeholder.vue'
+import VerticalLayout from '../../src/components/vertical.vue'
+import HorizontalLayout from '../../src/components/horizontal.vue'
+import Placeholder from '../../src/components/placeholder.vue'
 
 </script>
 
