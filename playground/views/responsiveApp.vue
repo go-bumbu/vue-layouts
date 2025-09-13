@@ -1,8 +1,12 @@
 <script setup>
-import Vertical from '../../src/components/vertical.vue'
-import Horizontal from '../../src/components/horizontal.vue'
-import Placeholder from '../../src/components/placeholder.vue'
-import SimpleSidebar from '../../src/components/simpleSidebar.vue'
+import Vertical from '../../src/compontents/vertical.vue'
+import Horizontal from '../../src/compontents/horizontal.vue'
+import Placeholder from '../../src/compontents/placeholder.vue'
+import SidebarContent from '../../src/compontents/SidebarContent.vue'
+import { ref } from "vue";
+
+const leftCollapsed2 = ref(true);
+
 
 </script>
 
@@ -31,12 +35,12 @@ import SimpleSidebar from '../../src/components/simpleSidebar.vue'
         <template #default>
             <Horizontal :verticalCenterContent="true" :centerContent="true"
                         content-max-width="960px"
-                       content-width="100%"
+                        content-width="100%"
                         left-max-width="200px"
                         right-max-width="200px"
                         right-width="200px"
                         right-min-width="200px"
-                >
+            >
                 <template #default>
                     <br>
                     <SidebarContent ref="childRef1">
@@ -70,9 +74,9 @@ import SimpleSidebar from '../../src/components/simpleSidebar.vue'
                     </SidebarContent>
 
 
-<!--
-=========================================================================================
--->
+                    <!--
+                    =========================================================================================
+                    -->
                     <br>
 
                 </template>
@@ -114,3 +118,24 @@ import SimpleSidebar from '../../src/components/simpleSidebar.vue'
         </template>
     </Vertical>
 </template>
+
+<style>
+.cc-rh-left{
+    background: #d5bcbc;
+}
+.cc-rh-right{
+    background: #495057;
+}
+.cc-rh-main{
+    background: #a5b1ba;
+}
+
+.button{
+    padding: 2px;
+    border: 1px solid #595656;
+    display: inline-block;
+    margin: 0.3rem 0.5rem ;
+    cursor: pointer;
+    background: #d1d1d1;
+}
+</style>
