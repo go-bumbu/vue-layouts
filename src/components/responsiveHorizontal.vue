@@ -1,104 +1,109 @@
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from "vue";
 
 const props = defineProps({
   leftSidebarCollapsed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   rightSidebarCollapsed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   mobileBehavior: {
     type: String,
-    default: 'menu',
-    validator: (value) => ['menu', 'content'].includes(value)
-  }
-})
+    default: "menu",
+    validator: (value) => ["menu", "content"].includes(value),
+  },
+});
 
-const emit = defineEmits(['update:leftSidebarCollapsed', 'update:rightSidebarCollapsed'])
+const emit = defineEmits([
+  "update:leftSidebarCollapsed",
+  "update:rightSidebarCollapsed",
+]);
 
-const windowWidth = ref(window.innerWidth)
-const isMobile = computed(() => windowWidth.value < 600)
-const isTablet = computed(() => windowWidth.value >= 600 && windowWidth.value < 900)
-const isDesktop = computed(() => windowWidth.value >= 900)
+const windowWidth = ref(window.innerWidth);
+const isMobile = computed(() => windowWidth.value < 600);
+const isTablet = computed(
+  () => windowWidth.value >= 600 && windowWidth.value < 900,
+);
+const isDesktop = computed(() => windowWidth.value >= 900);
 
 const leftSidebarStatus = computed({
   get() {
-    return props.leftSidebarCollapsed
+    return props.leftSidebarCollapsed;
   },
   set(val) {
-    emit('update:leftSidebarCollapsed', val)
-  }
-})
+    emit("update:leftSidebarCollapsed", val);
+  },
+});
 
 const rightSidebarStatus = computed({
   get() {
-    return props.rightSidebarCollapsed
+    return props.rightSidebarCollapsed;
   },
   set(val) {
-    emit('update:rightSidebarCollapsed', val)
-  }
-})
+    emit("update:rightSidebarCollapsed", val);
+  },
+});
 
 const updateWindowWidth = () => {
-  windowWidth.value = window.innerWidth
-}
+  windowWidth.value = window.innerWidth;
+};
 
 onMounted(() => {
-  window.addEventListener('resize', updateWindowWidth)
-})
+  window.addEventListener("resize", updateWindowWidth);
+});
 
 onUnmounted(() => {
-  window.removeEventListener('resize', updateWindowWidth)
-})
+  window.removeEventListener("resize", updateWindowWidth);
+});
 
 const containerStyle = computed(() => {
   if (isDesktop.value) {
     return {
-      maxWidth: '1100px',
-      margin: '0 auto'
-    }
+      maxWidth: "1100px",
+      margin: "0 auto",
+    };
   }
-  return {}
-})
+  return {};
+});
 
 const leftSidebarStyle = computed(() => {
-  if (isMobile.value && props.mobileBehavior === 'menu') {
+  if (isMobile.value && props.mobileBehavior === "menu") {
     return {
-      display: leftSidebarStatus.value ? 'none' : 'block',
-      position: 'fixed',
+      display: leftSidebarStatus.value ? "none" : "block",
+      position: "fixed",
       top: 0,
       left: 0,
-      height: '100vh',
+      height: "100vh",
       zIndex: 1000,
-      backgroundColor: 'white'
-    }
+      backgroundColor: "white",
+    };
   }
   return {
-    display: 'block',
-    width: leftSidebarStatus.value ? '0px' : 'auto'
-  }
-})
+    display: "block",
+    width: leftSidebarStatus.value ? "0px" : "auto",
+  };
+});
 
 const rightSidebarStyle = computed(() => {
-  if (isMobile.value && props.mobileBehavior === 'menu') {
+  if (isMobile.value && props.mobileBehavior === "menu") {
     return {
-      display: rightSidebarStatus.value ? 'none' : 'block',
-      position: 'fixed',
+      display: rightSidebarStatus.value ? "none" : "block",
+      position: "fixed",
       top: 0,
       right: 0,
-      height: '100vh',
+      height: "100vh",
       zIndex: 1000,
-      backgroundColor: 'white'
-    }
+      backgroundColor: "white",
+    };
   }
   return {
-    display: 'block',
-    width: rightSidebarStatus.value ? '0px' : 'auto'
-  }
-})
+    display: "block",
+    width: rightSidebarStatus.value ? "0px" : "auto",
+  };
+});
 </script>
 
 <template>
@@ -106,11 +111,11 @@ const rightSidebarStyle = computed(() => {
     <div class="cc-rh-left" :style="leftSidebarStyle">
       <slot name="left"></slot>
     </div>
-    
+
     <div class="cc-rh-main">
       <slot></slot>
     </div>
-    
+
     <div class="cc-rh-right" :style="rightSidebarStyle">
       <slot name="right"></slot>
     </div>
@@ -145,7 +150,7 @@ const rightSidebarStyle = computed(() => {
   .cc-rh {
     grid-template-columns: 1fr;
   }
-  
+
   .cc-rh.menu-behavior .cc-rh-left,
   .cc-rh.menu-behavior .cc-rh-right {
     position: fixed;
@@ -154,15 +159,15 @@ const rightSidebarStyle = computed(() => {
     z-index: 1000;
     background-color: white;
   }
-  
+
   .cc-rh.menu-behavior .cc-rh-left {
     left: 0;
   }
-  
+
   .cc-rh.menu-behavior .cc-rh-right {
     right: 0;
   }
-  
+
   .cc-rh.content-behavior {
     grid-template-rows: auto 1fr auto;
   }
@@ -178,4 +183,4 @@ const rightSidebarStyle = computed(() => {
   width: 100%;
   min-width: 0; /* Prevents content from overflowing */
 }
-</style> 
+</style>

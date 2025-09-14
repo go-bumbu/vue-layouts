@@ -38,36 +38,37 @@ It uses CSS Grid to create a responsive layout with customizable widths and supp
 ### Example Usage
 
 ```vue
+
 <template>
-  <Horizontal 
-    :fullHeight="true"
-    :centerContent="true"
-    :contentMaxWidth="1200"
-    v-model:sidebarOpen="isSidebarOpen"
-  >
-    <template #left>
-      <div class="sidebar">
-        <h3>Navigation</h3>
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Dashboard</a></li>
-          <li><a href="#">Settings</a></li>
-        </ul>
-        <button @click="isSidebarOpen = !isSidebarOpen">Toggle Sidebar</button>
-      </div>
-    </template>
-    
-    <div class="main-content">
-      <h1>Main Content Area</h1>
-      <p>This content will be horizontally centered with a max width of 1200px</p>
-    </div>
-    
-    <template #right>
-      <div class="right-panel">
-        <h3>Additional Info</h3>
-        <p>Right sidebar content</p>
-      </div>
-    </template>
-  </Horizontal>
+    <Horizontal
+        :fullHeight="true"
+        :centerContent="true"
+        :contentMaxWidth="1200"
+        v-model:sidebarOpen="isSidebarOpen"
+    >
+        <template #left>
+            <div class="b-sbc-sidebar">
+                <h3>Navigation</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+                <button @click="isSidebarOpen = !isSidebarOpen">Toggle Sidebar</button>
+            </div>
+        </template>
+
+        <div class="b-sbc-main">
+            <h1>Main Content Area</h1>
+            <p>This content will be horizontally centered with a max width of 1200px</p>
+        </div>
+
+        <template #right>
+            <div class="right-panel">
+                <h3>Additional Info</h3>
+                <p>Right sidebar content</p>
+            </div>
+        </template>
+    </Horizontal>
 </template>
 ```
