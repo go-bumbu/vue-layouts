@@ -16,7 +16,7 @@ export default defineConfig(({ command }) => ({
         })],
     build: command === "build" ? {
         lib: {
-            entry: path.resolve(__dirname, "src/index.js"),
+            entry: path.resolve(__dirname, "src/index.ts"),
             name: "VueLayouts",
             fileName: (format) => `vue-layouts.${format}.js`
         },

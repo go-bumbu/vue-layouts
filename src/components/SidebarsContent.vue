@@ -1,60 +1,62 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 
-const props = defineProps({
-  breakpoints: {
-    type: Object,
-    default: () => ({ sm: 600, md: 900, lg: 1200 }),
-  },
-  leftSidebarCollapsed: {
-    type: Boolean,
-    default: undefined,
-  },
-  rightSidebarCollapsed: {
-    type: Boolean,
-    default: undefined,
-  },
+interface Breakpoints {
+  sm: number;
+  md: number;
+  lg: number;
+}
+
+interface Props {
+  breakpoints?: Breakpoints;
+  leftSidebarCollapsed?: boolean;
+  rightSidebarCollapsed?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  breakpoints: () => ({ sm: 600, md: 900, lg: 1200 }),
 });
 
-const emit = defineEmits([
-  "update:leftSidebarCollapsed",
-  "update:rightSidebarCollapsed",
-]);
+type Emits = {
+  'update:leftSidebarCollapsed': [value: boolean];
+  'update:rightSidebarCollapsed': [value: boolean];
+}
 
-const localLeft = ref(false);
-const localRight = ref(false);
-const isMobile = ref<boolean | undefined>(undefined)
+const emit = defineEmits<Emits>();
+
+const localLeft = ref<boolean>(false);
+const localRight = ref<boolean>(false);
+const isMobile = ref<boolean | undefined>(undefined);
 // if parent provides a value, sync local state
 watch(
   () => props.leftSidebarCollapsed,
-  (val) => {
+  (val?: boolean) => {
     if (val !== undefined) localLeft.value = val;
   },
   { immediate: true },
 );
 
 // always use this as the source of truth in the template
-const effectiveLeft = computed(() => {
-  console.log(props.leftSidebarCollapsed);
+const effectiveLeft = computed<boolean>(() => {
   return props.leftSidebarCollapsed !== undefined
     ? props.leftSidebarCollapsed
     : localLeft.value;
 });
-const effectiveRight = computed(() => {
+const effectiveRight = computed<boolean>(() => {
   return props.rightSidebarCollapsed !== undefined
     ? props.rightSidebarCollapsed
     : localRight.value;
 });
 
 // expose setter that works in both cases
-function collapseLeft(val: boolean) {
+function collapseLeft(val: boolean): void {
   if (props.leftSidebarCollapsed === undefined) {
     localLeft.value = val; // uncontrolled mode
   } else {
     emit("update:leftSidebarCollapsed", val); // controlled mode
   }
 }
-function collapseRight(val: boolean) {
+function collapseRight(val: boolean): void {
   if (props.rightSidebarCollapsed === undefined) {
     localRight.value = val; // uncontrolled mode
   } else {
@@ -62,11 +64,11 @@ function collapseRight(val: boolean) {
   }
 }
 
-const width = ref(window.innerWidth);
-function updateWidth() {
+const width = ref<number>(window.innerWidth);
+function updateWidth(): void {
   width.value = window.innerWidth;
   if (
-    width.value <= props.breakpoints.md &&
+    width.value <= props.breakpoints!.md &&
     (isMobile.value == false || isMobile.value === undefined)
   ) {
     isMobile.value = true;
@@ -74,7 +76,7 @@ function updateWidth() {
     collapseRight(true);
   }
   if (
-    width.value > props.breakpoints.md &&
+    width.value > props.breakpoints!.md &&
     (isMobile.value == true || isMobile.value === undefined)
   ) {
     isMobile.value = false;
@@ -86,7 +88,7 @@ function updateWidth() {
 onMounted(() => window.addEventListener("resize", updateWidth));
 onMounted(() => {
   width.value = window.innerWidth;
-  if (width.value <= props.breakpoints.md) {
+  if (width.value <= props.breakpoints!.md) {
     isMobile.value = true;
     collapseLeft(true);
     collapseRight(true);
@@ -96,10 +98,12 @@ onMounted(() => {
 });
 onUnmounted(() => window.removeEventListener("resize", updateWidth));
 
-const currentSize = computed(() => {
-  if (width.value < props.breakpoints.sm) return "xs";
-  if (width.value < props.breakpoints.md) return "sm";
-  if (width.value < props.breakpoints.lg) return "md";
+type SizeType = 'xs' | 'sm' | 'md' | 'lg';
+
+const currentSize = computed<SizeType>(() => {
+  if (width.value < props.breakpoints!.sm) return "xs";
+  if (width.value < props.breakpoints!.md) return "sm";
+  if (width.value < props.breakpoints!.lg) return "md";
   return "lg";
 });
 </script>

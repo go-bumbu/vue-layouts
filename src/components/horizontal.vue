@@ -1,72 +1,50 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted } from "vue";
 
-const props = defineProps({
-  fullHeight: {
-    type: Boolean,
-    default: false,
-  },
-  centerContent: {
-    type: Boolean,
-    default: false,
-  },
-  contentWidth: {
-    type: [Number, String],
-    default: null,
-  },
-  contentMaxWidth: {
-    type: [Number, String],
-    default: null,
-  },
-  verticalCenterContent: {
-    type: Boolean,
-    default: false,
-  },
-  minHeight: {
-    type: [Number, String],
-    default: null,
-  },
-  leftMinWidth: {
-    type: [Number, String],
-    default: null,
-  },
-  leftMaxWidth: {
-    type: [Number, String],
-    default: null,
-  },
-  rightMinWidth: {
-    type: [Number, String],
-    default: null,
-  },
-  rightMaxWidth: {
-    type: [Number, String],
-    default: null,
-  },
-  // New props for overall container sizing
-  containerWidth: {
-    type: [Number, String],
-    default: "100%",
-  },
-  containerMaxWidth: {
-    type: [Number, String],
-    default: null,
-  },
-  // Two-way binding prop for controlling the sidebar.
-  // When not provided, the component will set the default based on the window width.
-  sidebarOpen: {
-    type: Boolean,
-    default: true,
-  },
+interface Props {
+  fullHeight?: boolean;
+  centerContent?: boolean;
+  contentWidth?: number | string | null;
+  contentMaxWidth?: number | string | null;
+  verticalCenterContent?: boolean;
+  minHeight?: number | string | null;
+  leftMinWidth?: number | string | null;
+  leftMaxWidth?: number | string | null;
+  rightMinWidth?: number | string | null;
+  rightMaxWidth?: number | string | null;
+  containerWidth?: number | string;
+  containerMaxWidth?: number | string | null;
+  sidebarOpen?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  fullHeight: false,
+  centerContent: false,
+  contentWidth: null,
+  contentMaxWidth: null,
+  verticalCenterContent: false,
+  minHeight: null,
+  leftMinWidth: null,
+  leftMaxWidth: null,
+  rightMinWidth: null,
+  rightMaxWidth: null,
+  containerWidth: "100%",
+  containerMaxWidth: null,
+  sidebarOpen: true,
 });
 
-const emit = defineEmits(["update:sidebarOpen"]);
+type Emits = {
+  'update:sidebarOpen': [value: boolean];
+}
+
+const emit = defineEmits<Emits>();
 
 // Create a computed property for two-way binding with sidebarOpen.
 const sidebarStatus = computed({
-  get() {
+  get(): boolean | undefined {
     return props.sidebarOpen;
   },
-  set(val) {
+  set(val: boolean): void {
     emit("update:sidebarOpen", val);
   },
 });
@@ -79,13 +57,13 @@ onMounted(() => {
 });
 
 // Helper function to convert a number or string to a valid CSS value.
-function convertToCss(value) {
+function convertToCss(value: number | string | null | undefined): string | null {
   if (!value) return null;
   return typeof value === "number" ? value + "px" : value;
 }
 
 // Determine the sidebar's fixed width when open.
-const leftWidth = computed(() => {
+const leftWidth = computed((): string => {
   return (
     convertToCss(props.leftMinWidth) ||
     convertToCss(props.leftMaxWidth) ||
@@ -95,10 +73,10 @@ const leftWidth = computed(() => {
 
 // Compute the overall container style.
 // When the sidebar is closed, its column width is set to 0px.
-const containerStyle = computed(() => {
+const containerStyle = computed((): Record<string, string | null> => {
   return {
     gridTemplateColumns: `${sidebarStatus.value ? leftWidth.value : "0px"} 1fr auto`,
-    width: convertToCss(props.containerWidth),
+    width: convertToCss(props.containerWidth) || "100%",
     maxWidth: convertToCss(props.containerMaxWidth),
   };
 });

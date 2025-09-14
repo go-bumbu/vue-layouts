@@ -19,50 +19,49 @@ if initially the menu should load open on mobile view
 
 -->
 
-<script setup>
+<script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
-const props = defineProps({
-  breakpoints: {
-    type: Object,
-    default: () => ({}),
-  },
-  mobileWidth: {
-    type: Number,
-    default: 450,
-  },
-  autoClose: {
-    type: Boolean,
-    default: true,
-  },
-  mobileOpen: {
-    type: Boolean,
-    default: false,
-  },
+interface Breakpoints {
+  [breakpoint: number]: string;
+}
+
+interface Props {
+  breakpoints?: Breakpoints;
+  mobileWidth?: number;
+  autoClose?: boolean;
+  mobileOpen?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  breakpoints: () => ({}),
+  mobileWidth: 450,
+  autoClose: true,
+  mobileOpen: false,
 });
 
-const sidebarOpen = defineModel("open");
+const sidebarOpen = defineModel<boolean>("open");
 // const toggleSidebar = () =>{
 //     collapsed.value=!collapsed.value
 // }
-const closeSidebar = () => {
+const closeSidebar = (): void => {
   sidebarOpen.value = false;
 };
-const mobileView = ref(false);
+const mobileView = ref<boolean>(false);
 
 // tell if view is mobile based on viewport with in relation to the auto-close width
-function isMobile() {
-  return props.mobileWidth >= getViewportWidth();
+function isMobile(): boolean {
+  return props.mobileWidth! >= getViewportWidth();
 }
 
-function getViewportWidth() {
+function getViewportWidth(): number {
   return window.innerWidth / window.devicePixelRatio;
 }
 
-const sizeClass = ref("default");
-let previousSize = null;
+const sizeClass = ref<string>("default");
+let previousSize: string | null = null;
 
-function checkViewportSize() {
+function checkViewportSize(): void {
   // prevent resize animation
   document.body.classList.add("resize-animation-stopper");
   setTimeout(() => {
@@ -83,10 +82,10 @@ function checkViewportSize() {
   }
 
   // add css classes based on prop breakpoints
-  let currentClass = null;
+  let currentClass: string | null = null;
   // Determine the current size based on breakpoints
-  for (const [breakpoint, cssClass] of Object.entries(props.breakpoints)) {
-    if (width < breakpoint) {
+  for (const [breakpoint, cssClass] of Object.entries(props.breakpoints!)) {
+    if (width < Number(breakpoint)) {
       currentClass = cssClass;
       break;
     }
@@ -101,14 +100,14 @@ function checkViewportSize() {
 }
 
 // limit the amount of resize events happening
-function throttle(callback, delay) {
+function throttle<T extends (...args: any[]) => any>(callback: T, delay: number): (...args: Parameters<T>) => void {
   let isThrottled = false;
 
-  function wrapper() {
+  function wrapper(this: any, ...args: Parameters<T>): void {
     if (isThrottled) {
       return;
     }
-    callback.apply(this, arguments);
+    callback.apply(this, args);
     isThrottled = true;
 
     // After the delay, allow the next call
@@ -123,7 +122,7 @@ function throttle(callback, delay) {
 const throttledCheckViewportSize = throttle(checkViewportSize, 100);
 
 // used to prevent animations when moutning the component
-const isMounted = ref(false);
+const isMounted = ref<boolean>(false);
 onMounted(() => {
   if (isMobile()) {
     sidebarOpen.value = props.mobileOpen;

@@ -2,7 +2,7 @@
 import Vertical from '../../src/components/vertical.vue'
 import Horizontal from '../../src/components/horizontal.vue'
 import Placeholder from '../../src/components/placeholder.vue'
-import SidebarContent from '../../src/components/SidebarContent.vue'
+import SidebarContent from '../../src/components/SidebarsContent.vue'
 import { ref } from "vue";
 
 const leftCollapsed2 = ref(true);

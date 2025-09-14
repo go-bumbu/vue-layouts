@@ -1,53 +1,53 @@
-<script setup>
+<script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from "vue";
 
-const props = defineProps({
-  leftSidebarCollapsed: {
-    type: Boolean,
-    default: false,
-  },
-  rightSidebarCollapsed: {
-    type: Boolean,
-    default: false,
-  },
-  mobileBehavior: {
-    type: String,
-    default: "menu",
-    validator: (value) => ["menu", "content"].includes(value),
-  },
+type MobileBehavior = 'menu' | 'content';
+
+interface Props {
+  leftSidebarCollapsed?: boolean;
+  rightSidebarCollapsed?: boolean;
+  mobileBehavior?: MobileBehavior;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  leftSidebarCollapsed: false,
+  rightSidebarCollapsed: false,
+  mobileBehavior: 'menu',
 });
 
-const emit = defineEmits([
-  "update:leftSidebarCollapsed",
-  "update:rightSidebarCollapsed",
-]);
+type Emits = {
+  'update:leftSidebarCollapsed': [value: boolean];
+  'update:rightSidebarCollapsed': [value: boolean];
+}
 
-const windowWidth = ref(window.innerWidth);
-const isMobile = computed(() => windowWidth.value < 600);
-const isTablet = computed(
+const emit = defineEmits<Emits>();
+
+const windowWidth = ref<number>(window.innerWidth);
+const isMobile = computed<boolean>(() => windowWidth.value < 600);
+const isTablet = computed<boolean>(
   () => windowWidth.value >= 600 && windowWidth.value < 900,
 );
-const isDesktop = computed(() => windowWidth.value >= 900);
+const isDesktop = computed<boolean>(() => windowWidth.value >= 900);
 
 const leftSidebarStatus = computed({
-  get() {
+  get(): boolean | undefined {
     return props.leftSidebarCollapsed;
   },
-  set(val) {
+  set(val: boolean): void {
     emit("update:leftSidebarCollapsed", val);
   },
 });
 
 const rightSidebarStatus = computed({
-  get() {
+  get(): boolean | undefined {
     return props.rightSidebarCollapsed;
   },
-  set(val) {
+  set(val: boolean): void {
     emit("update:rightSidebarCollapsed", val);
   },
 });
 
-const updateWindowWidth = () => {
+const updateWindowWidth = (): void => {
   windowWidth.value = window.innerWidth;
 };
 
@@ -59,7 +59,11 @@ onUnmounted(() => {
   window.removeEventListener("resize", updateWindowWidth);
 });
 
-const containerStyle = computed(() => {
+interface StyleObject {
+  [key: string]: string;
+}
+
+const containerStyle = computed<StyleObject>(() => {
   if (isDesktop.value) {
     return {
       maxWidth: "1100px",
@@ -69,15 +73,15 @@ const containerStyle = computed(() => {
   return {};
 });
 
-const leftSidebarStyle = computed(() => {
+const leftSidebarStyle = computed<StyleObject>(() => {
   if (isMobile.value && props.mobileBehavior === "menu") {
     return {
       display: leftSidebarStatus.value ? "none" : "block",
       position: "fixed",
-      top: 0,
-      left: 0,
+      top: "0",
+      left: "0",
       height: "100vh",
-      zIndex: 1000,
+      zIndex: "1000",
       backgroundColor: "white",
     };
   }
@@ -87,15 +91,15 @@ const leftSidebarStyle = computed(() => {
   };
 });
 
-const rightSidebarStyle = computed(() => {
+const rightSidebarStyle = computed<StyleObject>(() => {
   if (isMobile.value && props.mobileBehavior === "menu") {
     return {
       display: rightSidebarStatus.value ? "none" : "block",
       position: "fixed",
-      top: 0,
-      right: 0,
+      top: "0",
+      right: "0",
       height: "100vh",
-      zIndex: 1000,
+      zIndex: "1000",
       backgroundColor: "white",
     };
   }

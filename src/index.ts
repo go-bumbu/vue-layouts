@@ -1,3 +1,4 @@
+import { App } from 'vue';
 import VerticalLayout from "./components/vertical.vue";
 import HorizontalLayout from "./components/horizontal.vue";
 import HorizontalLayout2 from "./components/Horizontal2.vue";
@@ -14,9 +15,14 @@ export {
   SidebarContent,
 };
 
+// Define the plugin type
+interface LayoutsPlugin {
+  install(app: App): void;
+}
+
 // Provide an install function for Vue.use()
-export default {
-  install(app) {
+const plugin: LayoutsPlugin = {
+  install(app: App): void {
     app.component("VerticalLayout", VerticalLayout);
     app.component("HorizontalLayout", HorizontalLayout);
     app.component("HorizontalLayout2", HorizontalLayout2);
@@ -25,3 +31,5 @@ export default {
     app.component("SidebarContent", SidebarContent);
   },
 };
+
+export default plugin;

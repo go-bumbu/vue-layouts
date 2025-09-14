@@ -7,10 +7,10 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp src/index.d.ts dist/index.d.ts",
+    "build": "vite build",
     "watch": "vite build --watch",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts --fix --ignore-path .gitignore",
     "type-check": "npx vue-tsc --noEmit",
     "format": "prettier --write src/"
   },

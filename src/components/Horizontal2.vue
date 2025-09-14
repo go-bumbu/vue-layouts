@@ -1,29 +1,42 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 
-// Props kept to the essentials
-const props = defineProps({
-    sidebarOpen: { type: Boolean, default: true },
-    sidebarWidth: { type: [Number, String], default: 240 },
-    maxContentWidth: { type: [Number, String], default: null },
-    fullHeight: { type: Boolean, default: false },
-    centerContent: { type: Boolean, default: false },
-    verticalCenter: { type: Boolean, default: false },
+interface Props {
+    sidebarOpen?: boolean;
+    sidebarWidth?: number | string;
+    maxContentWidth?: number | string | null;
+    fullHeight?: boolean;
+    centerContent?: boolean;
+    verticalCenter?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    sidebarOpen: true,
+    sidebarWidth: 240,
+    maxContentWidth: null,
+    fullHeight: false,
+    centerContent: false,
+    verticalCenter: false,
 });
 
-const emit = defineEmits(["update:sidebarOpen"]);
+type Emits = {
+    'update:sidebarOpen': [value: boolean];
+}
+
+const emit = defineEmits<Emits>();
 
 const sidebar = computed({
-    get: () => props.sidebarOpen,
-    set: (val) => emit("update:sidebarOpen", val),
+    get: (): boolean | undefined => props.sidebarOpen,
+    set: (val: boolean): void => emit("update:sidebarOpen", val),
 });
 
-function toCss(value) {
+function toCss(value: number | string | null | undefined): string | undefined {
+    if (!value) return undefined;
     return typeof value === "number" ? `${value}px` : value;
 }
 
-const containerStyle = computed(() => ({
-    gridTemplateColumns: `${sidebar.value ? toCss(props.sidebarWidth) : "0px"} 1fr auto`,
+const containerStyle = computed((): Record<string, string> => ({
+    gridTemplateColumns: `${sidebar.value ? toCss(props.sidebarWidth) || "240px" : "0px"} 1fr auto`,
 }));
 </script>
 

@@ -1,9 +1,10 @@
-<script setup>
-defineProps({
-  centerContent: {
-    type: Boolean,
-    default: false,
-  },
+<script setup lang="ts">
+interface Props {
+  centerContent?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  centerContent: false,
 });
 </script>
 
