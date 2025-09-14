@@ -19,206 +19,214 @@ if initially the menu should load open on mobile view
 
 -->
 
-<script setup>
-import {  onBeforeUnmount, onMounted, ref } from 'vue'
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
-const props = defineProps({
-    breakpoints: {
-        type: Object,
-        default: () => ({})
-    },
-    mobileWidth: {
-        type: Number,
-        default: 450
-    },
-    autoClose: {
-        type: Boolean,
-        default: true
-    },
-    mobileOpen: {
-        type: Boolean,
-        default: false
-    }
-})
+interface Breakpoints {
+  [breakpoint: number]: string;
+}
 
-const sidebarOpen = defineModel('open')
+interface Props {
+  breakpoints?: Breakpoints;
+  mobileWidth?: number;
+  autoClose?: boolean;
+  mobileOpen?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  breakpoints: () => ({}),
+  mobileWidth: 450,
+  autoClose: true,
+  mobileOpen: false,
+});
+
+const sidebarOpen = defineModel<boolean>("open");
 // const toggleSidebar = () =>{
 //     collapsed.value=!collapsed.value
 // }
-const closeSidebar = () => {
-    sidebarOpen.value = false
-}
-const mobileView = ref(false)
+const closeSidebar = (): void => {
+  sidebarOpen.value = false;
+};
+const mobileView = ref<boolean>(false);
 
 // tell if view is mobile based on viewport with in relation to the auto-close width
-function isMobile() {
-    return props.mobileWidth >= getViewportWidth()
+function isMobile(): boolean {
+  return props.mobileWidth! >= getViewportWidth();
 }
 
-function getViewportWidth() {
-    return window.innerWidth / window.devicePixelRatio
+function getViewportWidth(): number {
+  return window.innerWidth / window.devicePixelRatio;
 }
 
-const sizeClass = ref('default')
-let previousSize = null
+const sizeClass = ref<string>("default");
+let previousSize: string | null = null;
 
-function checkViewportSize() {
-    // prevent resize animation
-    document.body.classList.add('resize-animation-stopper')
-    setTimeout(() => {
-        document.body.classList.remove('resize-animation-stopper')
-    }, 300)
+function checkViewportSize(): void {
+  // prevent resize animation
+  document.body.classList.add("resize-animation-stopper");
+  setTimeout(() => {
+    document.body.classList.remove("resize-animation-stopper");
+  }, 300);
 
-    const width = getViewportWidth()
-    mobileView.value = isMobile()
+  const width = getViewportWidth();
+  mobileView.value = isMobile();
 
-    // handle auto close on resize
-    if (props.autoClose) {
-        if (mobileView.value && sidebarOpen.value) {
-            sidebarOpen.value = false
-        }
-        if (!mobileView.value && !sidebarOpen.value) {
-            sidebarOpen.value = true
-        }
+  // handle auto close on resize
+  if (props.autoClose) {
+    if (mobileView.value && sidebarOpen.value) {
+      sidebarOpen.value = false;
     }
+    if (!mobileView.value && !sidebarOpen.value) {
+      sidebarOpen.value = true;
+    }
+  }
 
-    // add css classes based on prop breakpoints
-    let currentClass = null
-    // Determine the current size based on breakpoints
-    for (const [breakpoint, cssClass] of Object.entries(props.breakpoints)) {
-        if (width < breakpoint) {
-            currentClass = cssClass
-            break
-        }
+  // add css classes based on prop breakpoints
+  let currentClass: string | null = null;
+  // Determine the current size based on breakpoints
+  for (const [breakpoint, cssClass] of Object.entries(props.breakpoints!)) {
+    if (width < Number(breakpoint)) {
+      currentClass = cssClass;
+      break;
     }
-    if (!currentClass) {
-        currentClass = 'default'
-    }
-    if (currentClass !== previousSize) {
-        sizeClass.value = currentClass
-        previousSize = currentClass
-    }
+  }
+  if (!currentClass) {
+    currentClass = "default";
+  }
+  if (currentClass !== previousSize) {
+    sizeClass.value = currentClass;
+    previousSize = currentClass;
+  }
 }
 
 // limit the amount of resize events happening
-function throttle(callback, delay) {
-    let isThrottled = false
+function throttle<T extends (...args: any[]) => any>(callback: T, delay: number): (...args: Parameters<T>) => void {
+  let isThrottled = false;
 
-    function wrapper() {
-        if (isThrottled) {
-            return
-        }
-        callback.apply(this, arguments)
-        isThrottled = true
-
-        // After the delay, allow the next call
-        setTimeout(function () {
-            isThrottled = false
-        }, delay)
+  function wrapper(this: any, ...args: Parameters<T>): void {
+    if (isThrottled) {
+      return;
     }
+    callback.apply(this, args);
+    isThrottled = true;
 
-    return wrapper
+    // After the delay, allow the next call
+    setTimeout(function () {
+      isThrottled = false;
+    }, delay);
+  }
+
+  return wrapper;
 }
 
-const throttledCheckViewportSize = throttle(checkViewportSize, 100)
+const throttledCheckViewportSize = throttle(checkViewportSize, 100);
 
 // used to prevent animations when moutning the component
-const isMounted = ref(false)
+const isMounted = ref<boolean>(false);
 onMounted(() => {
-    if (isMobile()) {
-        sidebarOpen.value = props.mobileOpen
-    }
-    mobileView.value = isMobile()
+  if (isMobile()) {
+    sidebarOpen.value = props.mobileOpen;
+  }
+  mobileView.value = isMobile();
 
-    window.addEventListener('resize', throttledCheckViewportSize)
-    // prevent animations to run on initial load
-    setTimeout(() => {
-        isMounted.value = true
-    }, 20)
-})
+  window.addEventListener("resize", throttledCheckViewportSize);
+  // prevent animations to run on initial load
+  setTimeout(() => {
+    isMounted.value = true;
+  }, 20);
+});
 
 onBeforeUnmount(() => {
-    // Clean up the event listener when the component is unmounted
-    window.removeEventListener('resize', throttledCheckViewportSize)
-})
+  // Clean up the event listener when the component is unmounted
+  window.removeEventListener("resize", throttledCheckViewportSize);
+});
 </script>
 
 <template>
-    <div
-        class="ss-wrapper"
-        :class="[sizeClass, { open: sidebarOpen }, { mobile: mobileView }, { anim: isMounted }]"
-    >
-        <div class="ss-left" :class="{ anim: isMounted }">
-            <slot name="menu"></slot>
-        </div>
-        <div class="ss-main" :class="{ anim: isMounted }">
-            <slot></slot>
-        </div>
-        <div class="ss-overlay" @click="closeSidebar" :class="{ open: sidebarOpen }"></div>
+  <div
+    class="ss-wrapper"
+    :class="[
+      sizeClass,
+      { open: sidebarOpen },
+      { mobile: mobileView },
+      { anim: isMounted },
+    ]"
+  >
+    <div class="ss-left" :class="{ anim: isMounted }">
+      <slot name="menu"></slot>
     </div>
+    <div class="ss-main" :class="{ anim: isMounted }">
+      <slot></slot>
+    </div>
+    <div
+      class="ss-overlay"
+      @click="closeSidebar"
+      :class="{ open: sidebarOpen }"
+    ></div>
+  </div>
 </template>
 
 <style lang="scss">
 :root {
-    --ss-width: 300px;
+  --ss-width: 300px;
 }
 
 .resize-animation-stopper * {
-    animation: none !important;
-    transition: none !important;
+  animation: none !important;
+  transition: none !important;
 }
 
 .ss-wrapper {
-    .ss-left {
-        width: var(--ss-width);
-        position: fixed;
-        top: 0;
-        left: calc(var(--ss-width) * -1);
-        height: 100%;
-        z-index: 100;
+  .ss-left {
+    width: var(--ss-width);
+    position: fixed;
+    top: 0;
+    left: calc(var(--ss-width) * -1);
+    height: 100%;
+    z-index: 100;
 
-        &.anim {
-            transition: left 0.3s;
-        }
+    &.anim {
+      transition: left 0.3s;
     }
+  }
 
-    &.open .ss-left {
-        left: 0;
+  &.open .ss-left {
+    left: 0;
+  }
+
+  .ss-main {
+    margin-left: 0;
+    z-index: 0;
+
+    &.anim {
+      transition: margin-left 0.3s;
     }
+  }
 
-    .ss-main {
-        margin-left: 0;
-        z-index: 0;
+  &.open .ss-main {
+    margin-left: var(--ss-width);
+  }
 
-        &.anim {
-            transition: margin-left 0.3s;
-        }
+  &.open.mobile .ss-main {
+    margin-left: 0;
+  }
+
+  &.mobile .ss-overlay {
+    z-index: 99;
+    background: #424242;
+    transition: opacity 0.3s;
+    opacity: 0;
+
+    cursor: pointer;
+    &.open {
+      opacity: 80%;
+      transition: opacity 0.3s;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
     }
-
-    &.open .ss-main {
-        margin-left: var(--ss-width);
-    }
-
-    &.open.mobile .ss-main {
-        margin-left: 0;
-    }
-
-    &.mobile .ss-overlay {
-        z-index: 99;
-        background: #424242;
-        transition: opacity 0.3s;
-        opacity: 0;
-
-        cursor: pointer;
-        &.open {
-            opacity: 80%;
-            transition: opacity 0.3s;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-    }
+  }
 }
 </style>
