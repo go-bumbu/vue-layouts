@@ -13,6 +13,6 @@ vuejs layout utility library
     * in the library project run: `npm link`
     * in the target project run:  `npm link @go-bumbu/vue-layouts`
 * view linked modules `npm ls -g --depth=0 --link=true`
-* unlink module in the target run: `npm unlink -g @go-bumbu/vue-components`
+* unlink module in the target run: `npm unlink -g @go-bumbu/vue-layouts`
 * run dev server
     * in the library run 
